@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  vip-client:
+    image: angular-app
+    build:
+      context: ./Client
+      dockerfile: ./Dockerfile
+    ports:
+      - 3000:80
+    container_name: client-container
+    depends_on:
+      - vip-api
+
+  vip-api:
+    image: aspnetapp
+    build:
+      context: ./API
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:80
+    container_name: api-container
+    depends_on:
+      - elastic
+    networks:
+      - vip-network
+
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
+    container_name: elastic-container
+    networks:
+      - vip-network
+
+networks:
+  vip-network:

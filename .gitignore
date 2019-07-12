@@ -1,0 +1,6 @@
+./Client/node_modules
+./Client/npm-debug.log
+./Client/dist/node_modules
+./Client/dist/npm-debug.log
+./API/obj
+./API/bin
