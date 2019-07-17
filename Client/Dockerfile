@@ -3,9 +3,8 @@ LABEL author="Devil"
 
 # Building Angular app
 WORKDIR /app
-COPY package.json /app/
-RUN npm install -g npm@6.2.0
-RUN npm install
+COPY package*.json /app/
+RUN npm ci
 COPY . /app
 RUN npm run build
 
