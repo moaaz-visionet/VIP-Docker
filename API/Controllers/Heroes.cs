@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +17,13 @@ namespace Tour_Of_Heroes_Server.Controllers
     [Route("api/[controller]")]
     public class Heroes : Controller
     {
+        private readonly IElasticClient _elasticClient;
+
+        public Heroes(IElasticClient elasticClient)
+        {
+            _elasticClient = elasticClient;
+        }
+
         // GET: api/values
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -64,19 +71,7 @@ namespace Tour_Of_Heroes_Server.Controllers
 
         private async Task<List<Hero>> Search(string value = "")
         {
-            var connectionString = new ConnectionSettings(new Uri(AppConfig.ElasticServer));
-            var _elasticClient = new ElasticClient(connectionString);
-
-            if (_elasticClient.IndexExists(AppConfig.Index).Exists)
-            {
-                _elasticClient.DeleteIndex(AppConfig.Index);
-            }
-            else
-            {
-                var newIndex = new CreateIndexDescriptor(AppConfig.Index).Mappings(x => x.Map<Hero>(m => m.AutoMap().Properties(p => p)));
-            }
-
-            _elasticClient.IndexMany(GetHeroes(), AppConfig.Index);
+            //_elasticClient.IndexMany(GetHeroes(), AppConfig.Index);
 
             var result = await _elasticClient.SearchAsync<Hero>(x => x
                         .Index(AppConfig.Index)
